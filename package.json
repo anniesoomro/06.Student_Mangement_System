@@ -1,0 +1,20 @@
+{
+  "name": "annie_student_management_system",
+  "version": "1.0.0",
+  "description": "This is student management system project made with inquirer node js and typescript",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Annie",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "inquirer": "^9.2.21"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^9.0.7"
+  }
+}
