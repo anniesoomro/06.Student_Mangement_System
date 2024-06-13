@@ -1,9 +1,10 @@
 {
   "name": "annie_student_management_system",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "This is student management system project made with inquirer node js and typescript",
   "main": "index.js",
   "type": "module",
+  "bin": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
