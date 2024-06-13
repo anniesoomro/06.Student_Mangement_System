@@ -1,6 +1,6 @@
 {
   "name": "annie_student_management_system",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This is student management system project made with inquirer node js and typescript",
   "main": "index.js",
   "type": "module",

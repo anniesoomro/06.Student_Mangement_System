@@ -1,104 +1,80 @@
 #! /usr/bin/env node
 import inquirer from "inquirer";
 import chalk from "chalk";
-class student {
-    id;
-    name;
-    coursesEnrolled;
-    feesAmount;
-    constructor(id, name, coursesEnrolled, feesAmount) {
-        this.id = id;
-        this.name = name;
-        this.coursesEnrolled = coursesEnrolled;
-        this.feesAmount = feesAmount;
+const randomNumber = Math.floor(10000 + Math.random() * 90000);
+let myBalance = 0;
+let answer = await inquirer.prompt([
+    {
+        name: "students",
+        type: "input",
+        message: "Enter student name:",
+        validate: function (value) {
+            if (value.trim() !== "") {
+                return true;
+            }
+            return "Please enter a non-empty value.";
+        },
+    },
+    {
+        name: "courses",
+        type: "list",
+        message: "Select the course to enrolled",
+        choices: ["MS.Office", "HTML", "Javascript", "Typescript", "Python"]
+    }
+]);
+const tutionFee = {
+    "MS.Office": 2000,
+    "HTML": 2500,
+    "Javascript": 5000,
+    "Typescript": 6000,
+    "Python": 10000
+};
+console.log(chalk.bgBlue `\nTution Fees: ${tutionFee[answer.courses]}/-\n`);
+console.log(chalk.bgGray `Balance: ${myBalance}\n`);
+let paymentType = await inquirer.prompt([
+    {
+        name: "payment",
+        type: "list",
+        message: "Select payment method",
+        choices: ["Bank Transfer", "Easypaisa", "Jazzcash"]
+    },
+    {
+        name: "amount",
+        type: "input",
+        message: "Transfer Money:",
+        validate: function (value) {
+            if (value.trim() !== "") {
+                return true;
+            }
+            return "Please enter a non-empty value.";
+        },
+    }
+]);
+console.log(chalk.bgCyanBright `\nYou select payment method ${paymentType.payment}\n`);
+const tutionFees = tutionFee[answer.courses];
+const paymentAmount = parseFloat(paymentType.amount);
+if (tutionFees === paymentAmount) {
+    console.log(chalk.bgYellow `Congratulations, you have successfully enrolled in ${answer.courses}.\n`);
+    let ans = await inquirer.prompt([
+        {
+            name: "select",
+            type: "list",
+            message: "What would you like to do next?",
+            choices: ["View Status", "Exit"]
+        }
+    ]);
+    if (ans.select === "View Status") {
+        console.log("\n************Status************\n");
+        console.log(chalk.bgBlackBright.bold `Student Name: ${answer.students}`);
+        console.log(chalk.green.bold `Student ID: ${randomNumber}`);
+        console.log(chalk.red.bold `Course: ${answer.courses}`);
+        console.log(chalk.bgCyanBright.bold `Tution Fees Paid: ${paymentAmount}`);
+        console.log(chalk.blueBright.bold `Balance: ${myBalance += paymentAmount}`);
+    }
+    else {
+        console.log(chalk.magentaBright.bold("\nExiting Student Management System\n"));
     }
 }
-let baseId = 10000;
-let studentId = "";
-let continueEnrollment = true;
-let students = [];
-do {
-    let action = await inquirer.prompt({
-        type: "list",
-        name: "ans",
-        message: "Please select an option\n",
-        choices: ["Enroll a student", "Show student status"]
-    });
-    if (action.ans === "Enroll a student") {
-        let studentName = await inquirer.prompt({
-            type: "input",
-            name: "ans",
-            message: "Please enter your name"
-        });
-        let trimmedStudentName = (studentName.ans).trim().toLowerCase();
-        let studentNameCheck = students.map(obj => obj.name);
-        if (studentNameCheck.includes(trimmedStudentName) === false) {
-            if (trimmedStudentName !== "") {
-                baseId++;
-                studentId = "STID" + baseId;
-                console.log(chalk.blueBright.bold.italic("\n\tYour account has been created"));
-                console.log(chalk.cyanBright.bold.italic(`Welcome, ${trimmedStudentName}!`));
-                let course = await inquirer.prompt({
-                    type: "list",
-                    name: "ans",
-                    message: "Please select a course",
-                    choices: ["IT", "English", "Cooking"]
-                });
-                let courseFees = 0;
-                switch (course.ans) {
-                    case "IT":
-                        courseFees = 5000;
-                        break;
-                    case "English":
-                        courseFees = 500;
-                        break;
-                    case "Cooking":
-                        courseFees = 200;
-                        break;
-                }
-                let courseConfirm = await inquirer.prompt({
-                    type: "confirm",
-                    name: "ans",
-                    message: "Do you want to enroll in this course"
-                });
-                if (courseConfirm.ans === true) {
-                    let Student = new student(studentId, trimmedStudentName, [course.ans], courseFees);
-                    students.push(Student);
-                    console.log(chalk.redBright.bold.italic("You have enrolled in this course"));
-                }
-            }
-            else {
-                console.log(chalk.greenBright.bold.italic("Invalid name"));
-            }
-        }
-        else {
-            console.log(chalk.yellowBright.bold.italic("this name is already exist"));
-        }
-    }
-    else if (action.ans === "Show student status") {
-        if (students.length !== 0) {
-            let studentNameCheck = students.map(e => e.name);
-            let selectedStudent = await inquirer.prompt({
-                type: "list",
-                name: "ans",
-                message: "Please select name",
-                choices: studentNameCheck
-            });
-            let foundStudent = students.find(Student => Student.name === selectedStudent.ans);
-            console.log(chalk.red.bold.italic("Student information"));
-            console.log(foundStudent);
-            console.log("\n");
-        }
-        else {
-            console.log(chalk.bold.italic("Record is empty"));
-        }
-    }
-    let userConfirm = await inquirer.prompt({
-        type: "confirm",
-        name: "ans",
-        message: "Do you want to continue?"
-    });
-    if (userConfirm.ans === false) {
-        continueEnrollment = false;
-    }
-} while (continueEnrollment);
+else {
+    console.log(chalk.green.bold("Invalid amount due to course\n"));
+}
